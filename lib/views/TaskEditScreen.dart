@@ -249,8 +249,8 @@ class _TaskEditState extends State<TaskEdit> {
                                   }
                                 }
 
-                                print(list3[0].note);
-                                //print(taskcontroller.newtasklist.length);
+                                //  print(list3[0].note);
+                                // print(taskcontroller.newtasklist.length);
                                 return ListTile(
                                     trailing: PopupMenuButton(
                                       onSelected: (value) {
