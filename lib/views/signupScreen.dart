@@ -58,6 +58,8 @@ class SignupScreen extends StatelessWidget {
               authcontroller.signup(
                   username: usernamecontroller.text,
                   password: passwordcontroller.text);
+              usernamecontroller.dispose();
+              passwordcontroller.dispose();
             }),
             child: Text("Signup"))
       ]),
