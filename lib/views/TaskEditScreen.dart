@@ -125,6 +125,23 @@ class _TaskEditState extends State<TaskEdit> {
                                               .title)
                                   .length,
                               itemBuilder: (context, index1) {
+                                List list1 = [];
+                                List<int> list1Index = [];
+                                for (int i = 0;
+                                    i < taskcontroller.tasks.length;
+                                    i++) {
+                                  if (taskcontroller.tasks[i].taskdate!.day <
+                                          DateTime.now().day &&
+                                      taskcontroller.tasks[i].category ==
+                                          taskcontroller2
+                                              .categorylist[
+                                                  widget.categoryIndex]
+                                              .title) {
+                                    list1.add(taskcontroller.tasks[i]);
+                                    // list2Index.add(i);
+                                  }
+                                }
+
                                 return ListTile(
                                     trailing: Checkbox(
                                       value: false,
@@ -143,43 +160,38 @@ class _TaskEditState extends State<TaskEdit> {
                                             ));
                                       },
                                     ),
-                                    title: Text(taskcontroller
-                                        .tasks[index1].note
-                                        .toString()),
-                                    subtitle: Text(taskcontroller
-                                        .tasks[index1].taskdate
-                                        .toString()));
+                                    title: Text(list1[index1].note.toString()),
+                                    subtitle: Text(
+                                        list1[index1].taskdate.toString()));
                               }))),
                           Text('Today'),
-                          ListView.builder(
+                          Obx((() => ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: taskcontroller2
-                                  .categorylist[widget.categoryIndex]
-                                  .addnewtask!
+                              itemCount: taskcontroller.tasks
                                   .where((p0) =>
-                                      p0.taskdate!.day == DateTime.now().day)
+                                      p0.taskdate!.day == DateTime.now().day &&
+                                      p0.category ==
+                                          taskcontroller2
+                                              .categorylist[
+                                                  widget.categoryIndex]
+                                              .title)
                                   .length,
                               itemBuilder: (context, index2) {
                                 List list2 = [];
                                 List<int> list2Index = [];
                                 for (int i = 0;
-                                    i <
-                                        taskcontroller2
-                                            .categorylist[widget.categoryIndex]
-                                            .addnewtask!
-                                            .length;
+                                    i < taskcontroller.tasks.length;
                                     i++) {
-                                  if (taskcontroller2
-                                          .categorylist[widget.categoryIndex]
-                                          .addnewtask![i]
-                                          .taskdate!
-                                          .day ==
-                                      DateTime.now().day) {
-                                    list2.add(taskcontroller2
-                                        .categorylist[widget.categoryIndex]
-                                        .addnewtask![i]);
-                                    list2Index.add(i);
+                                  if (taskcontroller.tasks[i].taskdate!.day ==
+                                          DateTime.now().day &&
+                                      taskcontroller.tasks[i].category ==
+                                          taskcontroller2
+                                              .categorylist[
+                                                  widget.categoryIndex]
+                                              .title) {
+                                    list2.add(taskcontroller.tasks[i]);
+                                    // list2Index.add(i);
                                   }
                                 }
 
@@ -200,14 +212,14 @@ class _TaskEditState extends State<TaskEdit> {
                                                         builder: ((context) {
                                                   return NewTask(
                                                     Category:
-                                                        list2[index].category,
+                                                        list2[index2].category,
                                                     description:
-                                                        list2[index].Desc,
-                                                    note: list2[index].note,
+                                                        list2[index2].Desc,
+                                                    note: list2[index2].note,
                                                     taskdate:
-                                                        list2[index].taskdate,
+                                                        list2[index2].taskdate,
                                                     action: 'Modify',
-                                                    index: list2Index[index],
+                                                    index: list2Index[index2],
                                                   );
                                                 })))),
                                       ],
@@ -215,7 +227,7 @@ class _TaskEditState extends State<TaskEdit> {
                                     title: Text(list2[index2].note.toString()),
                                     subtitle: Text(
                                         list2[index2].taskdate.toString()));
-                              }),
+                              }))),
                           Text("Done"),
                           ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
