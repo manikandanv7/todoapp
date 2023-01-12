@@ -15,20 +15,19 @@ class TaskEdit extends StatefulWidget {
   State<TaskEdit> createState() => _TaskEditState();
 }
 
-void navigatetoNewTaskScreen(
-    {required String category,
-    required String desc,
-    required String note,
-    required DateTime taskdate,
-    required String action,
-    required int index}) {
+void navigatetoNewTaskScreen({
+  required String category,
+  required String desc,
+  required String note,
+  required DateTime taskdate,
+  required String action,
+}) {
   Get.to(() => NewTask(
         Category: category,
         description: desc,
         note: note,
         taskdate: taskdate,
         action: 'Modify',
-        index: index,
       ));
 }
 
@@ -83,7 +82,7 @@ class _TaskEditState extends State<TaskEdit> {
                         .where((element) =>
                             element.category ==
                             taskcontroller2
-                                .categorylist[widget.categoryIndex].title)
+                                .categorylist[widget.categoryIndex + 1].title)
                         .length
                         .toString(),
                     style: TextStyle(color: Colors.white, fontSize: 18))
@@ -142,23 +141,44 @@ class _TaskEditState extends State<TaskEdit> {
                                   }
                                 }
 
+                                //print(list2[index2].note.toString());
                                 return ListTile(
-                                    trailing: Checkbox(
-                                      value: false,
-                                      onChanged: (value) {
-                                        Get.to(() => NewTask(
-                                              Category: taskcontroller
-                                                  .tasks[index].category,
-                                              description: taskcontroller
-                                                  .tasks[index].Desc,
-                                              note: taskcontroller
-                                                  .tasks[index].note,
-                                              taskdate: taskcontroller
-                                                  .tasks[index].taskdate,
-                                              action: 'Modify',
-                                              index: index1,
-                                            ));
+                                    trailing: PopupMenuButton(
+                                      initialValue: 1,
+                                      child: Icon(Icons.more_vert),
+                                      onSelected: (value) {
+                                        switch (value) {
+                                          case 1:
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: ((context) {
+                                              return NewTask(
+                                                Category:
+                                                    list1[index1].category,
+                                                description: list1[index1].Desc,
+                                                note: list1[index1].note,
+                                                taskdate:
+                                                    list1[index1].taskdate,
+                                                action: 'Modify',
+                                              );
+                                            })));
+                                            break;
+                                          case 2:
+                                            taskcontroller.deletetask(
+                                                list1[index1].note.toString());
+                                            break;
+                                        }
                                       },
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: 2,
+                                          child: Text("Delete"),
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Modify"),
+                                          value: 1,
+                                        ),
+                                      ],
                                     ),
                                     title: Text(list1[index1].note.toString()),
                                     subtitle: Text(
@@ -200,28 +220,38 @@ class _TaskEditState extends State<TaskEdit> {
                                     trailing: PopupMenuButton(
                                       initialValue: 1,
                                       child: Icon(Icons.more_vert),
+                                      onSelected: (value) {
+                                        switch (value) {
+                                          case 1:
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: ((context) {
+                                              return NewTask(
+                                                Category:
+                                                    list2[index2].category,
+                                                description: list2[index2].Desc,
+                                                note: list2[index2].note,
+                                                taskdate:
+                                                    list2[index2].taskdate,
+                                                action: 'Modify',
+                                              );
+                                            })));
+                                            break;
+                                          case 2:
+                                            taskcontroller.deletetask(
+                                                list2[index2].note.toString());
+                                            break;
+                                        }
+                                      },
                                       itemBuilder: (context) => [
                                         PopupMenuItem(
+                                          value: 2,
                                           child: Text("Delete"),
                                         ),
                                         PopupMenuItem(
-                                            child: Text("Modify"),
-                                            value: 1,
-                                            onTap: () => Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: ((context) {
-                                                  return NewTask(
-                                                    Category:
-                                                        list2[index2].category,
-                                                    description:
-                                                        list2[index2].Desc,
-                                                    note: list2[index2].note,
-                                                    taskdate:
-                                                        list2[index2].taskdate,
-                                                    action: 'Modify',
-                                                    index: list2Index[index2],
-                                                  );
-                                                })))),
+                                          child: Text("Modify"),
+                                          value: 1,
+                                        ),
                                       ],
                                     ),
                                     title: Text(list2[index2].note.toString()),
@@ -229,93 +259,79 @@ class _TaskEditState extends State<TaskEdit> {
                                         list2[index2].taskdate.toString()));
                               }))),
                           Text("Done"),
-                          ListView.builder(
+                          Obx((() => ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: taskcontroller2
-                                  .categorylist[widget.categoryIndex]
-                                  .addnewtask!
+                              itemCount: taskcontroller.tasks
                                   .where((p0) =>
-                                      p0.taskdate!.day > DateTime.now().day)
+                                      p0.taskdate!.day > DateTime.now().day &&
+                                      p0.category ==
+                                          taskcontroller2
+                                              .categorylist[
+                                                  widget.categoryIndex]
+                                              .title)
                                   .length,
                               itemBuilder: (context, index3) {
                                 List list3 = [];
                                 List<int> list3Index = [];
                                 for (int i = 0;
-                                    i <
-                                        taskcontroller2
-                                            .categorylist[widget.categoryIndex]
-                                            .addnewtask!
-                                            .length;
+                                    i < taskcontroller.tasks.length;
                                     i++) {
-                                  if (taskcontroller2
-                                          .categorylist[widget.categoryIndex]
-                                          .addnewtask![i]
-                                          .taskdate!
-                                          .day >
-                                      DateTime.now().day) {
-                                    list3.add(taskcontroller2
-                                        .categorylist[widget.categoryIndex]
-                                        .addnewtask![i]);
-                                    list3Index.add(i);
+                                  if (taskcontroller.tasks[i].taskdate!.day >
+                                          DateTime.now().day &&
+                                      taskcontroller.tasks[i].category ==
+                                          taskcontroller2
+                                              .categorylist[
+                                                  widget.categoryIndex]
+                                              .title) {
+                                    list3.add(taskcontroller.tasks[i]);
+                                    // list2Index.add(i);
                                   }
                                 }
 
-                                //  print(list3[0].note);
-                                // print(taskcontroller.newtasklist.length);
+                                //print(list2[index2].note.toString());
                                 return ListTile(
                                     trailing: PopupMenuButton(
+                                      initialValue: 1,
+                                      child: Icon(Icons.more_vert),
                                       onSelected: (value) {
                                         switch (value) {
                                           case 1:
-                                            setState(() {
-                                              taskcontroller.tasks.removeWhere(
-                                                  (element) =>
-                                                      element.note ==
-                                                      taskcontroller2
-                                                          .categorylist[widget
-                                                              .categoryIndex]
-                                                          .addnewtask![
-                                                              list3Index[index]]
-                                                          .note);
-                                              taskcontroller2
-                                                  .categorylist[
-                                                      widget.categoryIndex]
-                                                  .addnewtask!
-                                                  .removeAt(list3Index[index]);
-                                              taskcontroller2.categorylist
-                                                  .refresh();
-                                            });
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: ((context) {
+                                              return NewTask(
+                                                Category:
+                                                    list3[index3].category,
+                                                description: list3[index3].Desc,
+                                                note: list3[index3].note,
+                                                taskdate:
+                                                    list3[index3].taskdate,
+                                                action: 'Modify',
+                                              );
+                                            })));
                                             break;
                                           case 2:
-                                            navigatetoNewTaskScreen(
-                                                category: list3[index].category,
-                                                desc: list3[index].Desc,
-                                                action: 'Modify',
-                                                index: list3Index[index],
-                                                note: list3[index].note,
-                                                taskdate:
-                                                    list3[index].taskdate);
+                                            taskcontroller.deletetask(
+                                                list3[index3].note.toString());
                                             break;
                                         }
                                       },
-                                      initialValue: 1,
-                                      child: Icon(Icons.more_vert),
                                       itemBuilder: (context) => [
                                         PopupMenuItem(
+                                          value: 2,
                                           child: Text("Delete"),
-                                          value: 1,
                                         ),
                                         PopupMenuItem(
                                           child: Text("Modify"),
-                                          value: 2,
-                                        )
+                                          value: 1,
+                                        ),
                                       ],
                                     ),
                                     title: Text(list3[index3].note.toString()),
                                     subtitle: Text(
                                         list3[index3].taskdate.toString()));
-                              }),
+                              }))),
                         ],
                       );
                     }))),

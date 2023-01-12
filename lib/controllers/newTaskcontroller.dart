@@ -80,6 +80,17 @@ class NewTaskController extends GetxController {
         .set(task1.toJson());
   }
 
+  void deletetask(String notes) async {
+    CollectionReference document = await store
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('tasks');
+    var snapshots = await document.where('note', isEqualTo: notes).get();
+    for (var doc in snapshots.docs) {
+      doc.reference.delete();
+    }
+  }
+
   getalltasks() async {
     _newtasklist.bindStream(store
         .collection('users')
@@ -95,13 +106,21 @@ class NewTaskController extends GetxController {
     }));
   }
 
-  void updateTask(int index, String desc, DateTime selecteddate, String note,
-      String category) async {
-    print(selecteddate);
-    _newtasklist[index].Desc = desc;
-    _newtasklist[index].category = category;
-    _newtasklist[index].taskdate = selecteddate;
-    _newtasklist[index].note = note;
+  void updateTask(
+      String desc, DateTime selecteddate, String note, String category) async {
+    CollectionReference document = await store
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('tasks');
+    var snapshots = await document.where('note', isEqualTo: note).get();
+    for (var doc in snapshots.docs) {
+      doc.reference.update({
+        'Desc': desc,
+        'category': category,
+        'note': note,
+        'taskdate': selecteddate
+      });
+    }
     //  await store.collection('users').doc(auth.currentUser!.uid).collection('tasks').doc(category).collection(note).doc('${auth.currentUser!.uid}.${selecteddate}')
     Get.to(() => TaskList());
   }

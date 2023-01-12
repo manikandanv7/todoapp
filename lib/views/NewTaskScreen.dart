@@ -7,21 +7,20 @@ import 'package:todoapp/controllers/newTaskcontroller.dart';
 import 'package:todoapp/controllers/taskcontroller.dart';
 
 class NewTask extends StatefulWidget {
-  NewTask(
-      {super.key,
-      this.Category,
-      this.description,
-      this.note,
-      this.taskdate,
-      this.action,
-      this.index});
+  NewTask({
+    super.key,
+    this.Category,
+    this.description,
+    this.note,
+    this.taskdate,
+    this.action,
+  });
   final String? description;
   final String? note;
   late String? Category;
 
   late DateTime? taskdate;
   late String? action;
-  late int? index;
 
   @override
   State<NewTask> createState() => _NewTaskState();
@@ -41,12 +40,12 @@ class _NewTaskState extends State<NewTask> {
         widget.description != null &&
         widget.note != null &&
         widget.taskdate != null) {
-      desccontroller.text = widget.description ?? "hai";
+      desccontroller.text = widget.description!;
       defaultcategory = widget.Category!;
       selecteddate = widget.taskdate!;
       notecontroller.text = widget.note!;
       action = widget.action!;
-      index = widget.index!;
+      ;
     }
 
     super.initState();
@@ -240,7 +239,6 @@ class _NewTaskState extends State<NewTask> {
                 Get.snackbar("Unable to create Task", "Give complete details");
               } else {
                 newtaskcontroller.updateTask(
-                    index!,
                     desccontroller.text,
                     selecteddate,
                     notecontroller.text,
